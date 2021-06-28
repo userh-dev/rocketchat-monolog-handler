@@ -20,7 +20,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Sysvale\\Logging\\": "src/"
+            "UseRH\\Logging\\": "src/"
         }
     },
     "autoload-dev": {
