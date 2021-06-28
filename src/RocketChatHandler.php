@@ -1,11 +1,11 @@
 <?php
 
-namespace Sysvale\Logging;
+namespace UseRH\Logging;
 
 use GuzzleHttp\Client;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
-use Sysvale\Logging\RocketChatRecord;
+use UseRH\Logging\RocketChatRecord;
 
 class RocketChatHandler extends AbstractProcessingHandler
 {
