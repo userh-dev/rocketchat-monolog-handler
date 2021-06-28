@@ -1,6 +1,6 @@
 {
-    "name": "sysvale/rocketchat-monolog-handler",
-    "description": "A Rocket.chat Monolog Handler meant to be used in Laravel projects developed by Sysvale Softgroup",
+    "name": "userh-dev/rocketchat-monolog-handler",
+    "description": "A Rocket.chat Monolog Handler meant to be used in Laravel projects developed by Sysvale Softgroup, forked by UseRH",
     "type": "library",
     "license": "MIT",
     "authors": [
