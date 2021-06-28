@@ -1,6 +1,6 @@
 <?php
 
-namespace Sysvale\Logging;
+namespace UseRH\Logging;
 
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\NormalizerFormatter;
