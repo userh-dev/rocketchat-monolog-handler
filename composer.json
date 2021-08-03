@@ -1,12 +1,16 @@
 {
     "name": "userh-dev/rocketchat-monolog-handler",
-    "description": "A Rocket.chat Monolog Handler meant to be used in Laravel projects developed by Sysvale Softgroup, forked by UseRH",
+    "description": "A Rocket.chat Monolog Handler meant to be used in Laravel projects originally developed by Sysvale Softgroup, currently maintained by UseRH.",
     "type": "library",
     "license": "MIT",
     "authors": [
         {
             "name": "Esron Dtamar",
             "email": "esron.dtamar@gmail.com"
+        },
+        {
+            "name": "USE SISTEMAS E APLICATIVOS LTDA",
+            "email": "desenvolvimento@userh.com.br"
         }
     ],
     "minimum-stability": "stable",
