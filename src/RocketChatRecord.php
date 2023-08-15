@@ -2,11 +2,12 @@
 
 namespace UseRH\Logging;
 
-use Monolog\Formatter\FormatterInterface;
-use Monolog\Formatter\NormalizerFormatter;
+use Monolog\Level;
+use Monolog\Utils;
 use Monolog\Logger;
 use Monolog\LogRecord;
-use Monolog\Utils;
+use Monolog\Formatter\FormatterInterface;
+use Monolog\Formatter\NormalizerFormatter;
 
 /**
  * Rocket.Chat record utility helping to log to Rocket.Chat webhooks.
@@ -44,14 +45,14 @@ class RocketChatRecord
      * @var array
      */
     private $levelColors = [
-        Logger::DEBUG     => "#9E9E9E",
-        Logger::INFO      => "#4CAF50",
-        Logger::NOTICE    => "#607D8B",
-        Logger::WARNING   => "#FFEB3B",
-        Logger::ERROR     => "#F44336",
-        Logger::CRITICAL  => "#F44336",
-        Logger::ALERT     => "#F44336",
-        Logger::EMERGENCY => "#F44336",
+        Level::Debug     => "#9E9E9E",
+        Level::Info      => "#4CAF50",
+        Level::Notice    => "#607D8B",
+        Level::Warning   => "#FFEB3B",
+        Level::Error     => "#F44336",
+        Level::Critical  => "#F44336",
+        Level::Alert     => "#F44336",
+        Level::Emergency => "#F44336",
     ];
 
     public function __construct(

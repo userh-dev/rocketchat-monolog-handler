@@ -2,50 +2,27 @@
 
 namespace UseRH\Logging;
 
+use Monolog\Level;
 use GuzzleHttp\Client;
-use Monolog\Handler\AbstractProcessingHandler;
-use Monolog\Logger;
 use Monolog\LogRecord;
 use UseRH\Logging\RocketChatRecord;
+use Monolog\Handler\AbstractProcessingHandler;
 
 class RocketChatHandler extends AbstractProcessingHandler
 {
-    /**
-     * @var \GuzzleHttp\Client;
-     */
-    private $client;
+    private Client $client;
 
-    /**
-     * Name that will appear in Rocket.Chat
-     * @var string|null
-     */
-    private $username;
+    private ?string $username;
 
-    /**
-     * @var array
-     */
-    private $webhooks;
+    private array $webhooks;
 
-    /**
-     * Instance of the SlackRecord util class preparing data for Slack API.
-     * @var RocketChatRecord
-     */
-    private $rocketChatRecord;
+    private RocketChatRecord $rocketChatRecord;
 
-    /**
-     * RocketChatHandler constructor.
-     *
-     * @param array $webhooks
-     * @param string $username
-     * @param string $emoji
-     * @param int $level
-     * @param bool $bubble
-     */
     public function __construct(
         array  $webhooks,
         string $username = null,
         string $emoji = null,
-        int    $level = Logger::ERROR,
+        int    $level = Level::Error,
         bool   $bubble = true
     ) {
         parent::__construct($level, $bubble);
