@@ -5,6 +5,7 @@ namespace UseRH\Logging;
 use GuzzleHttp\Client;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
+use Monolog\LogRecord;
 use UseRH\Logging\RocketChatRecord;
 
 class RocketChatHandler extends AbstractProcessingHandler
@@ -62,10 +63,9 @@ class RocketChatHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @param array $record
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         $content = $this->rocketChatRecord->getRocketChatData($record);
 

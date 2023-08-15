@@ -5,6 +5,7 @@ namespace UseRH\Logging;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\NormalizerFormatter;
 use Monolog\Logger;
+use Monolog\LogRecord;
 use Monolog\Utils;
 
 /**
@@ -65,7 +66,7 @@ class RocketChatRecord
         $this->normalizerFormatter = new NormalizerFormatter();
     }
 
-    public function getRocketChatData(array $record)
+    public function getRocketChatData(LogRecord $record)
     {
         $dataArray = array();
         $attachment = array(
@@ -104,14 +105,7 @@ class RocketChatRecord
         return $dataArray;
     }
 
-    /**
-     * Stringifies an array of key/value pairs to be used in attachment fields
-     *
-     * @param array $fields
-     *
-     * @return string
-     */
-    public function stringify($fields)
+    public function stringify(LogRecord $fields): string
     {
         $normalized = $this->normalizerFormatter->format($fields);
         $prettyPrintFlag = defined('JSON_PRETTY_PRINT') ? JSON_PRETTY_PRINT : 128;
@@ -128,15 +122,7 @@ class RocketChatRecord
             : Utils::jsonEncode($normalized, $flags);
     }
 
-    /**
-     * Generates attachment field
-     *
-     * @param string       $title
-     * @param string|array $value
-     *
-     * @return array
-     */
-    private function generateAttachmentField($title, $value)
+    private function generateAttachmentField(string $title, LogRecord $value): array
     {
         $value = is_array($value)
             ? sprintf('```%s```', $this->stringify($value))
@@ -149,14 +135,7 @@ class RocketChatRecord
         );
     }
 
-    /**
-     * Generates a collection of attachment fields from array
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    private function generateAttachmentFields(array $data)
+    private function generateAttachmentFields(LogRecord $data): array
     {
         $fields = array();
         foreach ($this->normalizerFormatter->format($data) as $key => $value) {
