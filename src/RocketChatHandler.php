@@ -7,8 +7,9 @@ use GuzzleHttp\Client;
 use Monolog\LogRecord;
 use UseRH\Logging\RocketChatRecord;
 use Monolog\Handler\AbstractProcessingHandler;
+use Monolog\Handler\HandlerInterface;
 
-class RocketChatHandler extends AbstractProcessingHandler
+class RocketChatHandler extends AbstractProcessingHandler implements HandlerInterface
 {
     private Client $client;
 
