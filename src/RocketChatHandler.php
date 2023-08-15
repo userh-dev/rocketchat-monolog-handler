@@ -20,11 +20,11 @@ class RocketChatHandler extends AbstractProcessingHandler implements HandlerInte
     private RocketChatRecord $rocketChatRecord;
 
     public function __construct(
-        array  $webhooks,
+        array $webhooks,
         string $username = null,
         string $emoji = null,
-        int    $level = Level::Error,
-        bool   $bubble = true
+        Level $level = Level::Error,
+        bool $bubble = true
     ) {
         parent::__construct($level, $bubble);
 

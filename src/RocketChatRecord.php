@@ -85,22 +85,22 @@ class RocketChatRecord
         if ($this->formatter) {
             $attachment['text'] = $this->formatter->format($record);
         } else {
-            $attachment['text'] = $record['message'];
+            $attachment['text'] = $record->message;
         }
 
         foreach (array('extra', 'context') as $key) {
-            if (empty($record[$key])) {
+            if (empty($record->{$key})) {
                 continue;
             }
 
             $attachment['fields'] = array_merge(
                 $attachment['fields'],
-                $this->generateAttachmentFields($record[$key])
+                $this->generateAttachmentFields($record->{$key})
             );
         }
 
-        $attachment['title'] = $record['level_name'];
-        $attachment['color'] = $this->levelColors[$record['level']];
+        $attachment['title'] = $record->level->name;
+        $attachment['color'] = $this->levelColors[$record->level];
         $dataArray['attachments'] = array($attachment);
 
         return $dataArray;
