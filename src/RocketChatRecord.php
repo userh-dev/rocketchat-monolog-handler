@@ -4,7 +4,6 @@ namespace UseRH\Logging;
 
 use Monolog\Level;
 use Monolog\Utils;
-use Monolog\Logger;
 use Monolog\LogRecord;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\NormalizerFormatter;
@@ -45,14 +44,14 @@ class RocketChatRecord
      * @var array
      */
     private $levelColors = [
-        Level::Debug     => "#9E9E9E",
-        Level::Info      => "#4CAF50",
-        Level::Notice    => "#607D8B",
-        Level::Warning   => "#FFEB3B",
-        Level::Error     => "#F44336",
-        Level::Critical  => "#F44336",
-        Level::Alert     => "#F44336",
-        Level::Emergency => "#F44336",
+        Level::Debug->name     => "#9E9E9E",
+        Level::Info->name      => "#4CAF50",
+        Level::Notice->name    => "#607D8B",
+        Level::Warning->name   => "#FFEB3B",
+        Level::Error->name     => "#F44336",
+        Level::Critical->name  => "#F44336",
+        Level::Alert->name     => "#F44336",
+        Level::Emergency->name => "#F44336",
     ];
 
     public function __construct(
@@ -95,12 +94,12 @@ class RocketChatRecord
 
             $attachment['fields'] = array_merge(
                 $attachment['fields'],
-                $this->generateAttachmentFields($record->{$key})
+                $this->generateAttachmentFields($record)
             );
         }
 
         $attachment['title'] = $record->level->name;
-        $attachment['color'] = $this->levelColors[$record->level];
+        $attachment['color'] = $this->levelColors[$record->level->name];
         $dataArray['attachments'] = array($attachment);
 
         return $dataArray;
@@ -140,7 +139,7 @@ class RocketChatRecord
     {
         $fields = array();
         foreach ($this->normalizerFormatter->format($data) as $key => $value) {
-            $fields[] = $this->generateAttachmentField($key, $value);
+            $fields[] = $this->generateAttachmentField($key, $data);
         }
 
         return $fields;
