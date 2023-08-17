@@ -2,50 +2,29 @@
 
 namespace UseRH\Logging;
 
+use Monolog\Level;
 use GuzzleHttp\Client;
-use Monolog\Handler\AbstractProcessingHandler;
-use Monolog\Logger;
+use Monolog\LogRecord;
 use UseRH\Logging\RocketChatRecord;
+use Monolog\Handler\AbstractProcessingHandler;
+use Monolog\Handler\HandlerInterface;
 
-class RocketChatHandler extends AbstractProcessingHandler
+class RocketChatHandler extends AbstractProcessingHandler implements HandlerInterface
 {
-    /**
-     * @var \GuzzleHttp\Client;
-     */
-    private $client;
+    private Client $client;
 
-    /**
-     * Name that will appear in Rocket.Chat
-     * @var string|null
-     */
-    private $username;
+    private ?string $username;
 
-    /**
-     * @var array
-     */
-    private $webhooks;
+    private array $webhooks;
 
-    /**
-     * Instance of the SlackRecord util class preparing data for Slack API.
-     * @var RocketChatRecord
-     */
-    private $rocketChatRecord;
+    private RocketChatRecord $rocketChatRecord;
 
-    /**
-     * RocketChatHandler constructor.
-     *
-     * @param array $webhooks
-     * @param string $username
-     * @param string $emoji
-     * @param int $level
-     * @param bool $bubble
-     */
     public function __construct(
-        array  $webhooks,
+        array $webhooks,
         string $username = null,
         string $emoji = null,
-        int    $level = Logger::ERROR,
-        bool   $bubble = true
+        Level $level = Level::Error,
+        bool $bubble = true
     ) {
         parent::__construct($level, $bubble);
 
@@ -62,10 +41,9 @@ class RocketChatHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @param array $record
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         $content = $this->rocketChatRecord->getRocketChatData($record);
 
