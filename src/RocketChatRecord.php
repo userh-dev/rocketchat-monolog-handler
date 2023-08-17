@@ -2,10 +2,11 @@
 
 namespace UseRH\Logging;
 
+use Monolog\Level;
+use Monolog\Utils;
+use Monolog\LogRecord;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\NormalizerFormatter;
-use Monolog\Logger;
-use Monolog\Utils;
 
 /**
  * Rocket.Chat record utility helping to log to Rocket.Chat webhooks.
@@ -37,20 +38,15 @@ class RocketChatRecord
      */
     private $normalizerFormatter;
 
-    /**
-     * Colors for a given log level.
-     *
-     * @var array
-     */
     private $levelColors = [
-        Logger::DEBUG     => "#9E9E9E",
-        Logger::INFO      => "#4CAF50",
-        Logger::NOTICE    => "#607D8B",
-        Logger::WARNING   => "#FFEB3B",
-        Logger::ERROR     => "#F44336",
-        Logger::CRITICAL  => "#F44336",
-        Logger::ALERT     => "#F44336",
-        Logger::EMERGENCY => "#F44336",
+        Level::Debug->name     => "#9E9E9E",
+        Level::Info->name      => "#4CAF50",
+        Level::Notice->name    => "#607D8B",
+        Level::Warning->name   => "#FFEB3B",
+        Level::Error->name     => "#F44336",
+        Level::Critical->name  => "#F44336",
+        Level::Alert->name     => "#F44336",
+        Level::Emergency->name => "#F44336",
     ];
 
     public function __construct(
@@ -65,55 +61,51 @@ class RocketChatRecord
         $this->normalizerFormatter = new NormalizerFormatter();
     }
 
-    public function getRocketChatData(array $record)
+    public function getRocketChatData(LogRecord $record)
     {
-        $dataArray = array();
-        $attachment = array(
-            'fields' => array(),
-        );
+        $normalizedRecord = $this->normalizerFormatter->format($record);
 
-        if ($this->username) {
+        $dataArray = [];
+
+        $attachment = [
+            'fields' => []
+        ];
+
+        if (!empty($this->username)) {
             $dataArray['username'] = $this->username;
         }
 
-        if ($this->emoji) {
+        if (!empty($this->emoji)) {
             $dataArray['emoji'] = $this->emoji;
         }
 
-        if ($this->formatter) {
+        if (!empty($this->formatter)) {
             $attachment['text'] = $this->formatter->format($record);
         } else {
-            $attachment['text'] = $record['message'];
+            $attachment['text'] = $normalizedRecord['message'];
         }
 
-        foreach (array('extra', 'context') as $key) {
-            if (empty($record[$key])) {
+        foreach (['extra', 'context'] as $key) {
+            if (empty($normalizedRecord[$key])) {
                 continue;
             }
 
-            $attachment['fields'] = array_merge(
-                $attachment['fields'],
-                $this->generateAttachmentFields($record[$key])
-            );
+            $attachment['fields'] = [
+                ...$attachment['fields'],
+                ...$this->generateAttachmentFields($normalizedRecord[$key])
+            ];
         }
 
-        $attachment['title'] = $record['level_name'];
-        $attachment['color'] = $this->levelColors[$record['level']];
+        $attachment['title'] = $record->level->name;
+        $attachment['color'] = $this->levelColors[$record->level->name];
         $dataArray['attachments'] = array($attachment);
 
         return $dataArray;
     }
 
-    /**
-     * Stringifies an array of key/value pairs to be used in attachment fields
-     *
-     * @param array $fields
-     *
-     * @return string
-     */
-    public function stringify($fields)
+    public function stringify(string|array $value): string
     {
-        $normalized = $this->normalizerFormatter->format($fields);
+        $normalized = $value;
         $prettyPrintFlag = defined('JSON_PRETTY_PRINT') ? JSON_PRETTY_PRINT : 128;
         $flags = 0;
         if (PHP_VERSION_ID >= 50400) {
@@ -128,15 +120,7 @@ class RocketChatRecord
             : Utils::jsonEncode($normalized, $flags);
     }
 
-    /**
-     * Generates attachment field
-     *
-     * @param string       $title
-     * @param string|array $value
-     *
-     * @return array
-     */
-    private function generateAttachmentField($title, $value)
+    private function generateAttachmentField(string $title, string|array $value): array
     {
         $value = is_array($value)
             ? sprintf('```%s```', $this->stringify($value))
@@ -149,17 +133,10 @@ class RocketChatRecord
         );
     }
 
-    /**
-     * Generates a collection of attachment fields from array
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    private function generateAttachmentFields(array $data)
+    private function generateAttachmentFields(array $data): array
     {
         $fields = array();
-        foreach ($this->normalizerFormatter->format($data) as $key => $value) {
+        foreach ($data as $key => $value) {
             $fields[] = $this->generateAttachmentField($key, $value);
         }
 
